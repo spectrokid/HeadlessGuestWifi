@@ -41,7 +41,7 @@ namespace ConnectionDiagnostic
                 LoginInfo.Url = DEFLURL;
             }
 
-
+            // url should be set now
             if (!string.IsNullOrEmpty(LoginInfo.Url))
             {
                 sb.AppendLine($"Opening '{LoginInfo.Url}'....");
@@ -53,8 +53,11 @@ namespace ConnectionDiagnostic
                 {
                     options.AddArgument("--headless"); // Optional: Run in headless mode
                 }
+                Console.WriteLine("Starting Firefox.This takes a looooong time. Please wait.");
                 using (var driver = new FirefoxDriver(options))
                 {
+                    Console.WriteLine("---------");
+                    Console.WriteLine("Firefox now running. Please wait.".PadRight(80,'-'));
                     try
                     {
                         WebDriverWait wait = RecursivePageLoad(sb, driver, LoginInfo.Url);
@@ -186,6 +189,7 @@ namespace ConnectionDiagnostic
                 try
                 {
                     // Navigate to the webpage
+                    Console.WriteLine($"Navigating to '{_url}', please wait.....");
                     driver.Navigate().GoToUrl(_url);
                     //driver.Navigate().GoToUrl("");
                     OpenQA.Selenium.VirtualAuth.VirtualAuthenticatorOptions opts = new();

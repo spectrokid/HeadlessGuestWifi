@@ -100,34 +100,42 @@ namespace ConnectionDiagnostic
                 sb.AppendLine("Wifi is connected, skipping this part......");
 
             }
+
+
             //try to connect
-            var availableNetwork = NativeWifi.EnumerateAvailableNetworks()
-            .Where(x => (x.ProfileName == LoginInfo.SSID))
-            .OrderByDescending(x => x.SignalQuality)
-            .FirstOrDefault();
-            if (availableNetwork != null && !this.WifiIsConnected)
+            if (!string.IsNullOrEmpty(LoginInfo.SSID))
             {
-
+                var availableNetwork = NativeWifi.EnumerateAvailableNetworks()
+                .Where(x => (x.ProfileName == LoginInfo.SSID))
+                .OrderByDescending(x => x.SignalQuality)
+                .FirstOrDefault();
+                if (availableNetwork != null && !this.WifiIsConnected)
                 {
-                    sb.AppendLine($"--- Try to connect to Wifi network:{availableNetwork.Ssid.ToString()}");
-                    var _success = WiFi.ConnectNetwork(
-                        interfaceId: availableNetwork.Interface.Id,
-                        profileName: availableNetwork.ProfileName,
-                        bssType: availableNetwork.BssType
-                                                );
 
-                    if (_success)   { sb.AppendLine("Wifi API report successfull connection!"); }
-                    else            { sb.AppendLine("Wifi API reports WIFI connectin failed!"); }
+                    {
+                        sb.AppendLine($"--- Try to connect to Wifi network:{availableNetwork.Ssid.ToString()}");
+                        var _success = WiFi.ConnectNetwork(
+                            interfaceId: availableNetwork.Interface.Id,
+                            profileName: availableNetwork.ProfileName,
+                            bssType: availableNetwork.BssType
+                                                    );
+
+                        if (_success)
+                        {
+                            sb.AppendLine("Wifi API report successfull connection!");
+                            this.WifiIsConnected = true;
+                        }
+                        else { sb.AppendLine("Wifi API reports WIFI connection failed!"); }
+                    }
+
                 }
 
-
-                WifiScanLog = sb.ToString();
             }
-
+            WifiScanLog = sb.ToString();
         }
 
 
-        
+
 
 
 

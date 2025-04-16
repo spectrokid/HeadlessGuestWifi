@@ -31,12 +31,18 @@ using (StreamWriter _writer = _de.LogWriter)
     Console.WriteLine(monitor.LogString);
     _writer?.WriteLine(monitor.LogString);
 
-    DNSredirectDetector dnsredirectdetector = new DNSredirectDetector();
-    dnsredirectdetector.Rundetector();
-    Console.WriteLine(dnsredirectdetector.logbook);
-    _writer?.WriteLine(dnsredirectdetector.logbook);
-
-
+    if (wiFi.WifiIsConnected)
+    {
+        DNSredirectDetector dnsredirectdetector = new DNSredirectDetector();
+        dnsredirectdetector.Rundetector();
+        Console.WriteLine(dnsredirectdetector.logbook);
+        _writer?.WriteLine(dnsredirectdetector.logbook);
+    }
+    else
+    {
+        Console.WriteLine("Wifi not connected, skipping DNS redirection detection...");
+        _writer?.WriteLine("Wifi not connected, skipping DNS redirection detection...");
+    }
 
     //if (TeamViewerMonitor.PingServer())
     //{
@@ -50,8 +56,9 @@ using (StreamWriter _writer = _de.LogWriter)
     //}
 
 
+    if (wiFi.WifiIsConnected)
     {
-        WebLoginHandler _wli = new WebLoginHandler( _headless);
+        WebLoginHandler _wli = new WebLoginHandler(_headless);
         Console.WriteLine(_wli.LogString);
         _writer?.WriteLine(_wli.LogString);
 
@@ -59,6 +66,11 @@ using (StreamWriter _writer = _de.LogWriter)
         Console.WriteLine(_wli.LogString);
         _writer?.WriteLine(_wli.LogString);
 
+    }
+    else
+    {
+        Console.WriteLine("Wifi not connected, skipping login attempt...");
+        _writer?.WriteLine("Wifi not connected, skipping login attempt...");
     }
 
 
